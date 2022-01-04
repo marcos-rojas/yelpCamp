@@ -1,0 +1,9 @@
+app.get('/makecampground', async (req, res) => {
+    const camp = new Campground({
+        title: "This is my second backyard",
+        price: "25",
+        description: "fabolous soups"
+    })
+    await camp.save()
+    res.send(camp);
+});
