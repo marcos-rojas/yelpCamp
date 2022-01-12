@@ -4,7 +4,9 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
-
+const passport = require('passport');
+const LocalStrategy = require('passport-local')
+const User = require('./models/user');
 
 const ejsMate = require("ejs-mate");
 const methodOverride = require('method-override');
@@ -12,6 +14,7 @@ const ExpressError = require('./utilities/ExpressError');
 
 const campgroundsRouter = require('./routes/campgrounds');
 const reviewsRouter = require('./routes/reviews');
+const usersRouter = require('./routes/users');
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp", { useNewUrlParser: true,
                                                          useUnifiedTopology: true })
@@ -54,11 +57,22 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 })
+
+// Middleware for our session
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Routes to work with
+
+
+app.use('/', usersRouter);
 app.use('/campgrounds', campgroundsRouter);
 app.use('/campgrounds/:id/reviews', reviewsRouter);
 
-// ROUTING
 app.get('/', (req, res) => {
     res.render('home')
 });
@@ -81,6 +95,7 @@ app.use((err, req, res, next) =>{
     res.render('error', {err});
 })
 
+// Connecting to the server
 app.listen(PORT, function () {
     console.log(`Connected to port ${PORT}`);
 })
