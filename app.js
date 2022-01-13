@@ -89,6 +89,7 @@ app.use((err, req, res, next) =>{
         err.message = 'Something went really wrong'
     }
     if(!(err instanceof ExpressError)){
+       // console.log(err)
         err.message = "Send me a message if you find this"
     }
     console.log(statusCode)
