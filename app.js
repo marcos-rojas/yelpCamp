@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+}
+
 const PORT = 3000;
 const express = require('express');
 const path = require('path');
@@ -89,7 +93,7 @@ app.use((err, req, res, next) =>{
         err.message = 'Something went really wrong'
     }
     if(!(err instanceof ExpressError)){
-       // console.log(err)
+        console.log(err)
         err.message = "Send me a message if you find this"
     }
     console.log(statusCode)
