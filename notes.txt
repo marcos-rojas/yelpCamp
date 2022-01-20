@@ -67,3 +67,15 @@ CREATE METHOD
                 </div>
                     <button class="btn btn-success">Add Campground</button>               
             </form>
+
+
+SECURITY ISSUES
+SQL/NoSQL injection (use fields to populate query)
+example:
+    db.users.find({username:{"$gt":""}})
+-> dont allow $ characters and so on
+
+solution: express-mongo-sanitize
+(usar el middleware indicado en su pagina)
+
+XSS

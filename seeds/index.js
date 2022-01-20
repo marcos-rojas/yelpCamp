@@ -31,7 +31,7 @@ async function seedImg() {
 
 const seedDB = async function () {
     await Campground.deleteMany({});
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 150; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
@@ -40,6 +40,9 @@ const seedDB = async function () {
             title: `${sample(descriptors)} ${sample(places)}`,
             description: "Nothing quite gets you into the holiday spirit like going to a Christmas festival. Walking down a candy cane lane, snapping photos with Santa, riding a holiday train, sipping hot chocolate while enjoying spectacular holiday lights - these are classic holiday moments that you and the entire family will forever cherish.",
             price: price,
+            geometry: {type: "Point",
+                    coordinates: [cities[random1000].longitude, 
+                    cities[random1000].latitude]},
             images: [  
                 {
                   url: 'https://res.cloudinary.com/dw9nm5hzr/image/upload/v1642096322/YelpCamp/ixfpfsuvk7s3tojnepov.jpg',
