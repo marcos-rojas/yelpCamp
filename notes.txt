@@ -78,4 +78,10 @@ example:
 solution: express-mongo-sanitize
 (usar el middleware indicado en su pagina)
 
-XSS
+XSS: when user try to enter some scripts on our webpage
+when we copy user input and treat it in JS
+ One solution: instead of joi, we can use: express-validator
+ Other solution: user sanitizer-html as well as an extension for joi
+
+ 
+
