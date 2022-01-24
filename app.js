@@ -6,14 +6,14 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoDBStore = require('connect-mongo')(session); // Mongo store for sessions
+const MongoDBStore = require('connect-mongo'); // Mongo store for sessions
 
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local')
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize'); // Against mongo injection
-const helmet = require('helment'); // against multiple security problems
+// const helmet = require('helmet'); // against multiple security problems
 
 const ejsMate = require("ejs-mate");
 const methodOverride = require('method-override');
@@ -48,14 +48,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize()); //security
 
 const secret = process.env.SECRET || 'thisshouldbeasecret';
-const store = new MongoDBStore({
-    url: dbUrl,
-    secret,
-    touchAfter: 24*60*60
-});
-
-store.on('error', function(e){
-    console.log('Session store error')
+const store = MongoDBStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'squirrel'
+    }
 });
 
 //Session (express-session) and cookies, flash options(connect-flash)
@@ -71,7 +69,7 @@ const sessionConfig = {
     }
 };
 app.use(session(sessionConfig));
-app.use(helmet());
+// app.use(helmet());
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
@@ -96,26 +94,26 @@ const connectSrcUrls = [
     "https://events.mapbox.com/",
 ];
 const fontSrcUrls = [];
-app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: [],
-            connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-            workerSrc: ["'self'", "blob:"],
-            objectSrc: [],
-            imgSrc: [
-                "'self'",
-                "blob:",
-                "data:",
-                "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
-                "https://images.unsplash.com/",
-            ],
-            fontSrc: ["'self'", ...fontSrcUrls],
-        },
-    })
-);
+// app.use(
+//     helmet.contentSecurityPolicy({
+//         directives: {
+//             defaultSrc: [],
+//             connectSrc: ["'self'", ...connectSrcUrls],
+//             scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+//             styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+//             workerSrc: ["'self'", "blob:"],
+//             objectSrc: [],
+//             imgSrc: [
+//                 "'self'",
+//                 "blob:",
+//                 "data:",
+//                 "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+//                 "https://images.unsplash.com/",
+//             ],
+//             fontSrc: ["'self'", ...fontSrcUrls],
+//         },
+//     })
+// );
 // Middleware for our session
 app.use(passport.initialize());
 app.use(passport.session());
