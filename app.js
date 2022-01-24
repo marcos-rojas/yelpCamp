@@ -6,6 +6,8 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoDBStore = require('connect-mongo')(session); // Mongo store for sessions
+
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local')
@@ -16,6 +18,7 @@ const helmet = require('helment'); // against multiple security problems
 const ejsMate = require("ejs-mate");
 const methodOverride = require('method-override');
 const ExpressError = require('./utilities/ExpressError');
+
 
 const campgroundsRouter = require('./routes/campgrounds');
 const reviewsRouter = require('./routes/reviews');
@@ -44,10 +47,21 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize()); //security
 
+const secret = process.env.SECRET || 'thisshouldbeasecret';
+const store = new MongoDBStore({
+    url: dbUrl,
+    secret,
+    touchAfter: 24*60*60
+});
+
+store.on('error', function(e){
+    console.log('Session store error')
+});
 
 //Session (express-session) and cookies, flash options(connect-flash)
 const sessionConfig = {
-    secret: 'holamundo',
+    store,
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie:{
@@ -55,7 +69,7 @@ const sessionConfig = {
         expires: Date.now()+1000*60*60*24*7,
         maxAge: 1000*60*60*24*7
     }
-}
+};
 app.use(session(sessionConfig));
 app.use(helmet());
 
