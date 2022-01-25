@@ -22,7 +22,7 @@ with EJS templates while styles are mainly Bootstrap5.
 Order summary cards are common when buying products or suscribing to some
 services. The flow of information as well as UI is very important to engage
 potential users.
-
+Link: 
 ### The challenge
 Make a responsive card with price, description and play functionality. Also,
 there is a change option as well as payment/cancel buttons. It has interactivity
@@ -35,8 +35,7 @@ when hover buttons, thus user knows state of its options.
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://github.com/marcos-rojas/FrontEndMentorC1)
-- Live Site URL: [Add live site URL here](https://marcos-rojas.github.io/FrontEndMentorC1/)
+- Live Site URL: [Add live site URL here](https://shielded-forest-07450.herokuapp.com/)
 
 ## My process
 
